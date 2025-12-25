@@ -1,0 +1,113 @@
+graph TB
+    subgraph "Frontend - Angular 19"
+        A[Angular App]
+        A1[Login Component]
+        A2[Home/Dashboard Component]
+        A3[Gastos Diarios Module]
+        A4[Tarjetas Module]
+        A5[Cuentas Module]
+        A6[Inversiones Module]
+        A7[Guards/Interceptors]
+        A8[Services]
+        
+        A --> A1
+        A --> A2
+        A --> A3
+        A --> A4
+        A --> A5
+        A --> A6
+        A --> A7
+        A --> A8
+    end
+    
+    subgraph "API Gateway / Load Balancer"
+        B[Nginx/API Gateway]
+    end
+    
+    subgraph "Backend - Spring Boot 4.0.1"
+        C[Spring Boot Application]
+        
+        subgraph "Security Layer"
+            C1[Spring Security 6.4]
+            C2[JWT Authentication]
+            C3[Authorization]
+        end
+        
+        subgraph "Controllers REST"
+            D1[Auth Controller]
+            D2[User Controller]
+            D3[Gastos Controller]
+            D4[Tarjetas Controller]
+            D5[Cuentas Controller]
+            D6[Inversiones Controller]
+        end
+        
+        subgraph "Service Layer"
+            E1[Auth Service]
+            E2[User Service]
+            E3[Gastos Service]
+            E4[Tarjetas Service]
+            E5[Cuentas Service]
+            E6[Inversiones Service]
+            E7[Reports Service]
+        end
+        
+        subgraph "Repository Layer"
+            F1[JPA Repositories]
+            F2[Custom Queries]
+        end
+        
+        C --> C1
+        C1 --> C2
+        C1 --> C3
+        C2 --> D1
+        C3 --> D2
+        C3 --> D3
+        C3 --> D4
+        C3 --> D5
+        C3 --> D6
+        
+        D1 --> E1
+        D2 --> E2
+        D3 --> E3
+        D4 --> E4
+        D5 --> E5
+        D6 --> E6
+        D3 --> E7
+        D4 --> E7
+        D5 --> E7
+        D6 --> E7
+        
+        E1 --> F1
+        E2 --> F1
+        E3 --> F1
+        E4 --> F1
+        E5 --> F1
+        E6 --> F1
+    end
+    
+    subgraph "Base de Datos"
+        G[(PostgreSQL/MySQL)]
+        G1[(Redis Cache)]
+    end
+    
+    subgraph "Servicios Externos"
+        H1[Email Service]
+        H2[SMS Service opcional]
+        H3[APIs Financieras externas]
+    end
+    
+    A8 -->|HTTP/HTTPS| B
+    B -->|REST API| C
+    F1 --> G
+    F2 --> G
+    E1 --> G1
+    E2 --> G1
+    E7 --> H1
+    E6 --> H3
+    
+    style A fill:#42A5F5
+    style C fill:#66BB6A
+    style G fill:#FFA726
+    style C1 fill:#EF5350
+    style B fill:#AB47BC
