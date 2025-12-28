@@ -1,0 +1,10 @@
+.header-toolbar {
+  // Esto usa el color primario definido en tu tema Azure-Blue
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

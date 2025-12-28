@@ -1,0 +1,10 @@
+.app-container {
+  height: calc(100vh - 64px);
+}
+.app-sidebar {
+  width: 250px;
+  border-right: 1px solid var(--mat-sys-outline-variant);
+}
+.app-content {
+  padding: 20px;
+}

@@ -1,0 +1,49 @@
+<div class="container">
+  <div class="header">
+    <h1>Mis Gastos</h1>
+    <div class="mode-indicator">
+      <mat-icon>{{ useMocks ? 'cloud_off' : 'cloud' }}</mat-icon>
+      <span>{{ useMocks ? 'Modo MOCK' : 'API Real' }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Cargando gastos...</p>
+  </div>
+
+  <div *ngIf="!loading && gastos.length === 0" class="empty">
+    <mat-icon>receipt_long</mat-icon>
+    <p>No hay gastos registrados</p>
+    <button mat-raised-button color="primary">
+      <mat-icon>add</mat-icon>
+      Agregar Primer Gasto
+    </button>
+  </div>
+
+  <div *ngIf="!loading && gastos.length > 0" class="gastos-list">
+    <mat-card *ngFor="let gasto of gastos" class="gasto-card">
+      <mat-card-content>
+        <div class="gasto-header">
+          <div>
+            <h3>{{ gasto.concepto }}</h3>
+            <p class="categoria">{{ gasto.categoria }}</p>
+          </div>
+          <div class="monto">${{ gasto.monto | number : '1.2-2' }}</div>
+        </div>
+        <div class="gasto-details">
+          <span>{{ gasto.fecha | date : 'dd/MM/yyyy' }}</span>
+          <span>{{ gasto.metodoPago }}</span>
+        </div>
+        <div class="actions">
+          <button mat-icon-button (click)="editGasto(gasto)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteGasto(gasto)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

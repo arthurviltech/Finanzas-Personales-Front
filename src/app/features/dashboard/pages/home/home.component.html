@@ -1,0 +1,172 @@
+<div class="dashboard-container">
+  <!-- Header del dashboard -->
+  <div class="dashboard-header">
+    <div class="greeting">
+      <h1>{{ getGreeting() }}, {{ userName }}!</h1>
+      <p class="date">{{ currentDate | date: 'EEEE, d MMMM yyyy':'':'es-MX' }}</p>
+    </div>
+  </div>
+
+  <!-- Cards de resumen -->
+  <div class="summary-section">
+    <div class="summary-grid">
+      <mat-card 
+        *ngFor="let card of summaryCards" 
+        class="summary-card"
+        [class]="'card-' + card.color">
+        <mat-card-content>
+          <div class="card-header">
+            <mat-icon class="card-icon">{{ card.icon }}</mat-icon>
+            <span 
+              *ngIf="card.trend" 
+              class="trend"
+              [class.positive]="card.trend > 0"
+              [class.negative]="card.trend < 0">
+              <mat-icon>{{ card.trend > 0 ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+              {{ card.trend }}%
+            </span>
+          </div>
+          <div class="card-body">
+            <p class="card-title">{{ card.title }}</p>
+            <h2 class="card-value">{{ card.value }}</h2>
+            <p class="card-subtitle" *ngIf="card.subtitle">{{ card.subtitle }}</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Acciones rápidas -->
+  <div class="quick-actions-section">
+    <h2 class="section-title">Acciones Rápidas</h2>
+    <div class="quick-actions-grid">
+      <button 
+        *ngFor="let action of quickActions"
+        mat-raised-button
+        [color]="action.color"
+        [routerLink]="action.route"
+        class="action-button">
+        <mat-icon>{{ action.icon }}</mat-icon>
+        <span>{{ action.label }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Grid de contenido principal -->
+  <div class="content-grid">
+    <!-- Transacciones recientes -->
+    <mat-card class="transactions-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>receipt_long</mat-icon>
+          Transacciones Recientes
+        </mat-card-title>
+        <button mat-icon-button routerLink="/gastos">
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="transactions-list">
+          <div 
+            *ngFor="let tx of recentTransactions"
+            class="transaction-item"
+            [class.income]="tx.tipo === 'ingreso'">
+            <div class="transaction-icon">
+              <mat-icon>{{ getCategoryIcon(tx.categoria) }}</mat-icon>
+            </div>
+            <div class="transaction-info">
+              <p class="transaction-concept">{{ tx.concepto }}</p>
+              <div class="transaction-meta">
+                <mat-chip class="category-chip">{{ tx.categoria }}</mat-chip>
+                <span class="transaction-date">{{ formatDate(tx.fecha) }}</span>
+              </div>
+            </div>
+            <div class="transaction-amount">
+              <span [class.amount-income]="tx.tipo === 'ingreso'">
+                {{ tx.tipo === 'ingreso' ? '+' : '-' }}${{ tx.monto | number:'1.2-2' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button mat-button color="primary" routerLink="/gastos">
+            Ver todas las transacciones
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Gráfica de gastos (placeholder) -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>pie_chart</mat-icon>
+          Gastos por Categoría
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-placeholder">
+          <mat-icon class="placeholder-icon">insert_chart</mat-icon>
+          <p>Gráfica de distribución de gastos</p>
+          <small>Implementar con Chart.js o ngx-charts</small>
+        </div>
+        <div class="category-summary">
+          <div class="category-item">
+            <div class="category-color" style="background-color: #667eea;"></div>
+            <span class="category-name">Alimentación</span>
+            <span class="category-amount">$5,500</span>
+          </div>
+          <div class="category-item">
+            <div class="category-color" style="background-color: #764ba2;"></div>
+            <span class="category-name">Transporte</span>
+            <span class="category-amount">$3,200</span>
+          </div>
+          <div class="category-item">
+            <div class="category-color" style="background-color: #f093fb;"></div>
+            <span class="category-name">Entretenimiento</span>
+            <span class="category-amount">$2,100</span>
+          </div>
+          <div class="category-item">
+            <div class="category-color" style="background-color: #4facfe;"></div>
+            <span class="category-name">Otros</span>
+            <span class="category-amount">$4,200</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Metas y alertas -->
+    <mat-card class="alerts-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>notifications</mat-icon>
+          Alertas y Recordatorios
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="alert-item warning">
+          <mat-icon>warning</mat-icon>
+          <div>
+            <p class="alert-title">Pago de tarjeta próximo</p>
+            <p class="alert-subtitle">Visa Oro - Vence en 5 días</p>
+          </div>
+        </div>
+        <div class="alert-item info">
+          <mat-icon>info</mat-icon>
+          <div>
+            <p class="alert-title">Meta de ahorro</p>
+            <p class="alert-subtitle">80% completado este mes</p>
+          </div>
+        </div>
+        <div class="alert-item success">
+          <mat-icon>check_circle</mat-icon>
+          <div>
+            <p class="alert-title">¡Bien hecho!</p>
+            <p class="alert-subtitle">Gastos 15% menos que el mes pasado</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
